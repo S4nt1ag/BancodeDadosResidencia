@@ -39,21 +39,17 @@ check (valor_unitario>0)
 
 CREATE TABLE compra (
 id_compra integer primary key autoincrement not null,
-id_usuario integer,
 id_pedido integer,
+id_produto integer,
 data_compra data,
-foreign key (id_usuario) references usuario (id_usuario),
+foreign key (id_produto) references produto (id_produto),
 foreign key (id_pedido) references pedido (id_pedido)
 )
 
 CREATE TABLE pedido (
 id_pedido integer primary key autoincrement not null,
-id_produto1 integer,
-qtd_produto1 integer,
-id_produto2 integer,
-qtd_produto2 integer,
-foreign key (id_produto1) references produto (id_produto),
-foreign key (id_produto2) references produto (id_produto)
+id_usuario integer,
+foreign key (id_usuario) references usuario (id_usuario)
 )
 
 -- inserção 
@@ -71,71 +67,143 @@ insert into produto (nome,descricao,quantidade_estoque, data_fabricação, valor
 ('fogao', '5 bocas Cooktop', 88, '17/10/2022', '970,65',1,4),
 ('televisão', 'smart tv led 50 4k Hq Conversor Digital Externo 3 HDMI 2 Usb Wi-Fi Android 11', 102, '04/01/2022', '1.899,00',1,1),
 ('cama', 'Cama King Boreal Flutuante', 50, '08/09/2022', '2.001,05',2,5),
-('aspirador', 'Ultra-potente', 18, "09/12/2020", '569,00',2,5)
+('aspirador', 'Ultra-potente', 18, '09/12/2020', '569,00',2,5)
 
 insert into categoria (nome,descricao) values
 ('eletronico','produto eletrodomestico'),
-('movel','artigo domestico nao eletronico')
+('movel','artigo domestico nao eletronico'),
+('ferramentas','utensilios de de modificação e reparação de bens'),
+('higiene', 'itens basicos de higiene'),
+('decoração', 'itens para deixar sua casa aconchegante')
 
 
 -- pedidos
 
-insert into pedido (id_produto1,qtd_produto1) values
-('1','1'),
-('5','2')
-
-insert into pedido (id_produto1,qtd_produto1,id_produto2,qtd_produto2) values
-('3','1','4','2'),
-('4','3','3','2'),
-('2','4','5','3')
-
-insert into pedido (id_produto1,qtd_produto1) values
-('1','1'),
-('5','10')
+insert into pedido (id_usuario) values
+('1'),
+('5'),
+('2'),
+('4'),
+('3')
 
 
 -- oficializar compras
 
-insert into compra (id_pedido,id_usuario,data_compra) values
+-- compra caio botelho
+insert into compra (id_pedido,id_produto, data_compra) values
 ('3','2','25/12/2022'),
-('1','1','01/04/2022'),
-('4','5','03/02/2023'),
-('2','3','17/02/2023'),
-('5','4','27/09/2022')
+('3','3','25/12/2022'),
+('3','4','25/12/2022'),
+('3','4','25/12/2022'),
+('3','2','25/12/2022')
+
+--compra gabriel
+insert into compra (id_pedido,id_produto, data_compra) values
+('5','1','17/02/2022'),
+('5','1','17/02/2022'),
+('5','3','17/02/2022'),
+('5','4','17/02/2022'),
+('5','4','17/02/2022')
+
+--compras joyce
+insert into compra (id_pedido,id_produto, data_compra) values
+('4','5','17/10/2023'),
+('4','5','17/10/2023'),
+('4','1','17/10/2023')
+
+--compras caio jose
+insert into compra (id_pedido,id_produto, data_compra) values
+('2','4','04/01/2023'),
+('2','4','04/01/2023'),
+('2','2','04/01/2023'),
+('2','3','04/01/2023')
+
+--compras roberta
+insert into compra (id_pedido,id_produto, data_compra) values
+('1','1','25/12/2022'),
+('1','1','25/12/2022'),
+('1','1','25/12/2022'),
+('1','3','25/12/2022'),
+('1','3','25/12/2022'),
+('1','5','25/12/2022'),
+('1','5','25/12/2022'),
+('1','5','25/12/2022'),
+('1','2','25/12/2022')
+
 
 --update estoque 
 
+--compra caio B--
 update produto 
-set quantidade_estoque = 87
-where id_produto = 3
+set quantidade_estoque = 25
+where id_produto = 2
 
 update produto 
 set quantidade_estoque = 100
 where id_produto = 4
 
 update produto 
-set quantidade_estoque = 53
+set quantidade_estoque = 87
+where id_produto = 3
+
+--compra gabriel--
+update produto 
+set quantidade_estoque = 86
+where id_produto = 3
+
+update produto 
+set quantidade_estoque = 52
 where id_produto = 1
 
 update produto 
-set quantidade_estoque = 97
+set quantidade_estoque = 98
 where id_produto = 4
+
+--compra joyce--
+update produto 
+set quantidade_estoque = 48
+where id_produto = 5
+
+update produto 
+set quantidade_estoque = 51
+where id_produto = 1
+
+--compra caio J--
+update produto 
+set quantidade_estoque = 24
+where id_produto = 2
 
 update produto 
 set quantidade_estoque = 85
 where id_produto = 3
 
 update produto 
-set quantidade_estoque = 48
-where id_produto = 5
+set quantidade_estoque = 96
+where id_produto = 4
 
+--compra roberta--
 update produto 
 set quantidade_estoque = 23
 where id_produto = 2
 
 update produto 
-set quantidade_estoque = 47
+set quantidade_estoque = 45
 where id_produto = 5
+
+update produto 
+set quantidade_estoque = 83
+where id_produto = 3
+
+update produto 
+set quantidade_estoque = 48
+where id_produto = 1
+
+--exclusão
+
+DELETE FROM
+        produto
+        WHERE
+        nome = 'aspirador'
 
 -- consultas 
 
@@ -147,7 +215,7 @@ select p.nome, c.nome, c.descricao
 from produto p , categoria c 
 where p.id_categoria = c.id_categoria and p.id_produto  like '5'
 
-select nome , count(*)
+select nome, count(*) 
 from produto p
 where p.id_categoria like '1%'
 group by p.nome 
@@ -158,50 +226,52 @@ where p.id_usuario = u.id_usuario
 
 --notas fiscais
 
---primeira compra--
-select u.cpf, p.nome,p2.qtd_produto1, p.valor_unitario,  p4.nome, p3.qtd_produto2, p4.valor_unitario , c.data_compra 
-from usuario u 
-inner join compra c 
-on c.id_usuario = u.id_usuario and c.id_compra like '1'
-inner join produto p, pedido p2 
-on p.id_produto = p2.id_produto1 and p2.id_pedido like '3'
-inner join produto p4, pedido p3 
-on p4.id_produto = p3.id_produto2 and p3.id_pedido like '3'
+--nota pedido caio botelho
+select u.nome, u.cpf  , p2.nome, p2.valor_unitario, count(c.id_produto), c.data_compra  
+from compra c 
+inner join usuario u, pedido p  
+on u.id_usuario = p.id_usuario  and p.id_pedido like '3'
+inner join produto p2 
+on p2.id_produto = c.id_produto and c.id_pedido like '3'
+group by p2.nome 
+order by p2.nome 
 
--- segunda compra--
-select u.cpf, p.nome,p2.qtd_produto1, p.valor_unitario, c.data_compra 
-from usuario u 
-inner join compra c 
-on c.id_usuario = u.id_usuario and c.id_compra like '2'
-inner join produto p, pedido p2 
-on p.id_produto = p2.id_produto1 and p2.id_pedido like '1'
+--nota pedido gabriel
+select u.nome, u.cpf  , p2.nome, p2.valor_unitario, count(c.id_produto), c.data_compra  
+from compra c 
+inner join usuario u, pedido p  
+on u.id_usuario = p.id_usuario  and p.id_pedido like '5'
+inner join produto p2 
+on p2.id_produto = c.id_produto and c.id_pedido like '5'
+group by p2.nome 
+order by p2.nome 
 
--- terceira compra--
-select u.cpf, p.nome,p2.qtd_produto1, p.valor_unitario,  p4.nome, p3.qtd_produto2, p4.valor_unitario , c.data_compra 
-from usuario u 
-inner join compra c 
-on c.id_usuario = u.id_usuario and c.id_compra like '3'
-inner join produto p, pedido p2 
-on p.id_produto = p2.id_produto1 and p2.id_pedido like '4'
-inner join produto p4, pedido p3 
-on p4.id_produto = p3.id_produto2 and p3.id_pedido like '4'
+--nota pedido joyce
+select u.nome, u.cpf  , p2.nome, p2.valor_unitario, count(c.id_produto), c.data_compra  
+from compra c 
+inner join usuario u, pedido p  
+on u.id_usuario = p.id_usuario  and p.id_pedido like '4'
+inner join produto p2 
+on p2.id_produto = c.id_produto and c.id_pedido like '4'
+group by p2.nome 
+order by p2.nome 
 
---quarta compra--
-select u.cpf, p.nome,p2.qtd_produto1, p.valor_unitario, c.data_compra 
-from usuario u 
-inner join compra c 
-on c.id_usuario = u.id_usuario and c.id_compra like '4'
-inner join produto p, pedido p2 
-on p.id_produto = p2.id_produto1 and p2.id_pedido like '2'
+--nota caio jose
+select u.nome, u.cpf  , p2.nome, p2.valor_unitario, count(c.id_produto), c.data_compra  
+from compra c 
+inner join usuario u, pedido p  
+on u.id_usuario = p.id_usuario  and p.id_pedido like '2'
+inner join produto p2 
+on p2.id_produto = c.id_produto and c.id_pedido like '2'
+group by p2.nome 
+order by p2.nome 
 
---quinta compra--
-select u.cpf, p.nome,p2.qtd_produto1, p.valor_unitario,  p4.nome, p3.qtd_produto2, p4.valor_unitario , c.data_compra 
-from usuario u 
-inner join compra c 
-on c.id_usuario = u.id_usuario and c.id_compra like '5'
-inner join produto p, pedido p2 
-on p.id_produto = p2.id_produto1 and p2.id_pedido like '5'
-inner join produto p4, pedido p3 
-on p4.id_produto = p3.id_produto2 and p3.id_pedido like '5'
-
-
+--nota Roberta
+select u.nome, u.cpf  , p2.nome, p2.valor_unitario, count(c.id_produto), c.data_compra  
+from compra c 
+inner join usuario u, pedido p  
+on u.id_usuario = p.id_usuario  and p.id_pedido like '1'
+inner join produto p2 
+on p2.id_produto = c.id_produto and c.id_pedido like '1'
+group by p2.nome 
+order by p2.nome 
